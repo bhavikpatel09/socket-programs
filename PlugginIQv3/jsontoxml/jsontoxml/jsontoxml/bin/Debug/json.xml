@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<root>
+  <crc>5A61</crc>
+  <record>
+    <timeStamp>2018-11-21T18:20:42</timeStamp>
+    <deviceMetricList>
+      <resourceType>DeviceMetric</resourceType>
+      <identifier>main_phase_act</identifier>
+      <value>4</value>
+      <type>Actual main phase</type>
+      <source>
+        <resourceType>Device</resourceType>
+        <patient>123</patient>
+        <name>d100121</name>
+        <url>192.168.109.46</url>
+      </source>
+    </deviceMetricList>
+    <deviceMetricList>
+      <resourceType>DeviceMetric</resourceType>
+      <identifier>conc_source_des</identifier>
+      <value>0</value>
+      <type>Selected concentrate source</type>
+      <source>
+        <resourceType>Device</resourceType>
+        <patient>123</patient>
+        <name>d100121</name>
+        <url>192.168.109.46</url>
+      </source>
+    </deviceMetricList>
+    <deviceMetricList>
+      <resourceType>DeviceMetric</resourceType>
+      <identifier>bs_subphase_act</identifier>
+      <value>0</value>
+      <type>Blood side sub phase</type>
+      <source>
+        <resourceType>Device</resourceType>
+        <patient>123</patient>
+        <name>d100121</name>
+        <url>192.168.109.46</url>
+      </source>
+    </deviceMetricList>
+    <deviceMetricList>
+      <resourceType>DeviceMetric</resourceType>
+      <identifier>bs_sub_subphase_act</identifier>
+      <value>0</value>
+      <type>Blood side sub sub phase</type>
+      <source>
+        <resourceType>Device</resourceType>
+        <patient>123</patient>
+        <name>d100121</name>
+        <url>192.168.109.46</url>
+      </source>
+    </deviceMetricList>
+  </record>
+</root>

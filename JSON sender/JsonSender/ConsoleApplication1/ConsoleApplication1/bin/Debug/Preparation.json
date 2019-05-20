@@ -1,0 +1,32 @@
+{
+    "crc": "4E39",
+    "record": {
+        "timeStamp": "2018-11-12T11:50:15",
+        "deviceMetricList": [
+            {
+                "resourceType": "DeviceMetric",
+                "identifier": "main_phase_act",
+                "value": "1",
+                "type": "Actual main phase",
+                "source": {
+                    "resourceType": "Device",
+                    "patient": "98765432100",
+                    "name": "d100141",
+                    "url": "192.168.100.81"
+                }
+            },
+            {
+                "resourceType": "DeviceMetric",
+                "identifier": "conc_source_des",
+                "value": "0",
+                "type": "Selected concentrate source",
+                "source": {
+                    "resourceType": "Device",
+                    "patient": "98765432100",
+                    "name": "d100141",
+                    "url": "192.168.100.81"
+                }
+            }
+        ]
+    }
+}
