@@ -112,6 +112,7 @@ namespace pluginiq
                                 break;
                         }
 
+                        data = data.Replace("<EOF>", "");
                         msg = jsontoxml.processJson(data);
                         handler.Send(msg);
 
