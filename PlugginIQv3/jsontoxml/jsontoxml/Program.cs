@@ -47,6 +47,7 @@ namespace pluginiq
 
         static void Main(string[] args)
         {
+            FreeTcpPort();
             listener.Bind(localEndPoint);
             //if (checkValidity())
             if (true)
@@ -90,7 +91,7 @@ namespace pluginiq
             {
 
 
-                listener.Listen(10000);
+                listener.Listen(10);
 
                 while (true)
                 {
@@ -100,33 +101,71 @@ namespace pluginiq
 
                     using (Socket handler = listener.Accept())
                     {
-
-                        string data = null;
-                        byte[] bytes = null;
-                        while (true)
+                        try
                         {
-                            bytes = new byte[102400];
-                            int bytesRec = handler.Receive(bytes);
-                            data += Encoding.ASCII.GetString(bytes, 0, bytesRec).Replace("\0", string.Empty);
-                            if (data.IndexOf("<EOF>") > -1)
+
+
+
+                            while (true)
+                            {
+                                msg = null;
+                                string data = null;
+                                byte[] bytes = null;
+                                bytes = new byte[1024000];
+                                int bytesRec = handler.Receive(bytes, bytes.Length, SocketFlags.None);
+                                Log.Info(bytesRec);
+                                Console.WriteLine(bytesRec);
+                                data += Encoding.ASCII.GetString(bytes, 0, bytesRec).Replace("\0", string.Empty);
+                                Log.Info(data);
+                                msg = jsontoxml.processJson(data);
                                 break;
+                            }
+                            handler.Send(msg);
+
+
+
+
+                            // UNCOMMENT THIS SECTION
+                            if (handler.Connected)
+                            {
+                                handler.Close();
+                                SendDataToFinalServer(msg);
+                            }
+
+                            // UNCOMMENT UNTIL HERE
+
+
+
+                            string lines = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " Successfully sent the ByteFrame to server";
+                            Log.Info("Successfully sent the ByteFrame to server");
+
+                            // handler.Shutdown(SocketShutdown.Both);
+                            //handler.Close();
                         }
+                        catch (Exception exc)
+                        {
 
-                        data = data.Replace("<EOF>", "");
-                        msg = jsontoxml.processJson(data);
-                        handler.Send(msg);
-
-                        string lines = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " Successfully sent the ByteFrame to server";
-                        Log.Info("Successfully sent the ByteFrame to server");
-
-                        handler.Shutdown(SocketShutdown.Both);
-                        handler.Close();
+                            var e = exc;
+                            Console.WriteLine("Exception: " + e.Message);
+                            if (handler.Connected)
+                            {
+                                handler.Shutdown(SocketShutdown.Both);
+                                handler.Close();
+                            }
+                        }
                     }
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                var e = ex;                
+                //if (handler.Connected)
+                //{
+                //    handler.Shutdown(SocketShutdown.Both);
+                //    handler.Close();
+                //}
+                //throw;
                 //string lines = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " Error in Sending ByteFrame to the Server";
                 //Log.Error("Error occured while creating the JSON Listener Connection:" + e.ToString());
                 //Log.Error("Printing the stack trace" + e.StackTrace);
@@ -134,9 +173,44 @@ namespace pluginiq
 
         }
 
+        private void SendDataToFinalServer(byte[] msg)
+        {
+            try
+            {
+                using (Socket finalHandler = new Socket(targetipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp))
+                {
+                    if (!finalHandler.Connected)
+                    {
+                        finalHandler.Connect(remoteEndPoint);
+                    }
+                    finalHandler.Send(msg);
+                    Console.WriteLine("Successfully sent the ByteFrame to server");
+                }
 
+                //// newEP = new IPEndPoint(ipAddress, 50000);
+                //Socket handler1 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //handler1.Connect(remoteEndPoint);
 
+                ////handler1.Connect(remoteEndPoint);
+                //// sending bytes 
+                //handler1.Send(msg);
+                //Console.WriteLine("Successfully sent the ByteFrame to server");
+            }
+            catch (Exception ex)
+            {
+                var e = ex;
+                Console.WriteLine("Exception: " + e.Message);
+            }
+        }
 
+        static int FreeTcpPort()
+        {
+            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+            l.Start();
+            int port = ((IPEndPoint)l.LocalEndpoint).Port;
+            l.Stop();
+            return port;
+        }
         private byte[] processJson(string jsonData)
         {
             byte[] xmlByteArray = null;

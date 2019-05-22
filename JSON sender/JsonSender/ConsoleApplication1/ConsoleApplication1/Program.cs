@@ -1,4 +1,5 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Configuration;
 using System.IO;
 using System.Net;
@@ -9,6 +10,8 @@ namespace JsonSender
 {
     class Program
     {
+        private static readonly ILog Log =
+              LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static int Main(String[] args)
         {
 
@@ -45,10 +48,10 @@ namespace JsonSender
                 try
                 {
 
-                    DirectoryInfo dir = new DirectoryInfo(@"D:\Bhavik\files\");//Folder path of 103 files
+                    DirectoryInfo dir = new DirectoryInfo(@"D:\Bhavik\PBhavik\Bhavik\socket-programs\files\");//Folder path of 103 files
                     int cnt = dir.GetFiles().Length;
 
-                    for (int i = 1; i <= cnt; i++)
+                    for (int i =1; i <= cnt; i++)
                     {
                         using (Socket sender = new Socket(iPAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp))
                         {
@@ -68,14 +71,14 @@ namespace JsonSender
                                     fullfile += s;
                                 }
                             }
-                            fullfile += "<EOF>";
 
                             msg = Encoding.ASCII.GetBytes(fullfile);
-
+                            Log.Info(fullfile);
                             Console.WriteLine("Sent files {0}", i);
 
                             int bytesSent = sender.Send(msg);
-                            System.Threading.Thread.Sleep(300);
+                            Console.WriteLine(bytesSent);
+                            System.Threading.Thread.Sleep(1000); // JSON message sending interval
                         }
                     }
                 }
@@ -97,6 +100,7 @@ namespace JsonSender
             {
                 Console.WriteLine("exception in try block " + e.ToString());
             }
+            Console.ReadLine();
         }
 
 
