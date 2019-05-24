@@ -99,67 +99,67 @@ namespace pluginiq
 
                     Console.WriteLine(localEndPoint);
 
-                    using (Socket handler = listener.Accept())
+                    Socket handler = listener.Accept();
+                    //{
+                    try
                     {
-                        try
+
+
+
+                        while (true)
                         {
-
-
-
-                            while (true)
-                            {
-                                msg = null;
-                                string data = null;
-                                byte[] bytes = null;
-                                bytes = new byte[1024000];
-                                int bytesRec = handler.Receive(bytes, bytes.Length, SocketFlags.None);
-                                Log.Info(bytesRec);
-                                Console.WriteLine(bytesRec);
-                                data += Encoding.ASCII.GetString(bytes, 0, bytesRec).Replace("\0", string.Empty);
-                                Log.Info(data);
-                                msg = jsontoxml.processJson(data);
-                                break;
-                            }
-                            handler.Send(msg);
-
-
-
-
-                            // UNCOMMENT THIS SECTION
-                            if (handler.Connected)
-                            {
-                               // handler.Close();
-                                SendDataToFinalServer(msg);
-                            }
-
-                            // UNCOMMENT UNTIL HERE
-
-
-
-                            string lines = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " Successfully sent the ByteFrame to server";
-                            Log.Info("Successfully sent the ByteFrame to server");
-
-                            // handler.Shutdown(SocketShutdown.Both);
-                            //handler.Close();
+                            msg = null;
+                            string data = null;
+                            byte[] bytes = null;
+                            bytes = new byte[1024000];
+                            int bytesRec = handler.Receive(bytes, bytes.Length, SocketFlags.None);
+                            Log.Info(bytesRec);
+                            Console.WriteLine(bytesRec);
+                            data += Encoding.ASCII.GetString(bytes, 0, bytesRec).Replace("\0", string.Empty);
+                            Log.Info(data);
+                            msg = jsontoxml.processJson(data);
+                            break;
                         }
-                        catch (Exception exc)
-                        {
+                        handler.Send(msg);
 
-                            var e = exc;
-                            Console.WriteLine("Exception: " + e.Message);
-                            if (handler.Connected)
-                            {
-                                handler.Shutdown(SocketShutdown.Both);
-                                handler.Close();
-                            }
+
+
+
+                        // UNCOMMENT THIS SECTION
+                        if (handler.Connected)
+                        {
+                            // handler.Close();
+                            SendDataToFinalServer(msg);
+                        }
+
+                        // UNCOMMENT UNTIL HERE
+
+
+
+                        string lines = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss") + " Successfully sent the ByteFrame to server";
+                        Log.Info("Successfully sent the ByteFrame to server");
+
+                        // handler.Shutdown(SocketShutdown.Both);
+                        //handler.Close();
+                    }
+                    catch (Exception exc)
+                    {
+
+                        var e = exc;
+                        Console.WriteLine("Exception: " + e.Message);
+                        if (handler.Connected)
+                        {
+                            handler.Shutdown(SocketShutdown.Both);
+                            handler.Close();
                         }
                     }
-
                 }
+
+                //}
             }
             catch (Exception ex)
             {
-                var e = ex;                
+                var e = ex;
                 //if (handler.Connected)
                 //{
                 //    handler.Shutdown(SocketShutdown.Both);
