@@ -128,7 +128,7 @@ namespace pluginiq
                             // UNCOMMENT THIS SECTION
                             if (handler.Connected)
                             {
-                                handler.Close();
+                               // handler.Close();
                                 SendDataToFinalServer(msg);
                             }
 

@@ -48,7 +48,7 @@ namespace JsonSender
                 try
                 {
 
-                    DirectoryInfo dir = new DirectoryInfo(@"D:\Bhavik\PBhavik\Bhavik\socket-programs\files\");//Folder path of 103 files
+                    DirectoryInfo dir = new DirectoryInfo(@"D:\Bhavik\PBhavik\Bhavik\SocketPrograms\develop\socket-programs\files\");//Folder path of 103 files
                     int cnt = dir.GetFiles().Length;
 
                     for (int i =1; i <= cnt; i++)
@@ -78,7 +78,7 @@ namespace JsonSender
 
                             int bytesSent = sender.Send(msg);
                             Console.WriteLine(bytesSent);
-                            System.Threading.Thread.Sleep(1000); // JSON message sending interval
+                            System.Threading.Thread.Sleep(100); // JSON message sending interval
                         }
                     }
                 }
